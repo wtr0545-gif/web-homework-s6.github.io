@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html id="html">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASK SESI 5</title>
+    <style>
+        #root {
+            background-color: cadetblue;
+            color: black;
+            height: 100vh;
+            text-align: center;
+            padding-top: 50px;
+            box-sizing: border-box;
+        }
+
+        #html {
+            padding: 0;
+            margin: 0;
+            background-color: cadetblue;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <input type="text" placeholder="username" id="usernameInput">
+        <input type="password" placeholder="password" id="passwordInput">
+        <button onclick="onlogin()" id="loginButton">LOGIN</button>
+        <button onclick="onlogout()" id="logoutButton" class="hidden">LOGOUT</button>
+
+        <h1 id="admin" class="hidden">Anda Login Sebagai Admin</h1>
+        <h1 id="basicBudi" class="hidden">Anda Login Sebagai User Budi</h1>
+        <h1 id="basicMawar" class="hidden">Anda Login Sebagai User Mawar</h1>
+        <h1 id="basicAndi" class="hidden">Anda Login Sebagai User Andi</h1>
+        <h1 id="basicDian" class="hidden">Anda Login Sebagai User Dian</h1>
+        <h1 id="basicSusi" class="hidden">Anda Login Sebagai User Susi</h1>
+    </div>
+
+    <script type="application/javascript">
+
+        // Data pengguna
+        const users = [
+            { username: "admin", password: "admin123", role: "admin" },
+            { username: "budi", password: "budi123", role: "basicBudi" },
+            { username: "mawar", password: "mawar123", role: "basicMawar" },
+            { username: "andi", password: "andi123", role: "basicAndi" },
+            { username: "dian", password: "dian123", role: "basicDian" },
+            { username: "susi", password: "susi123", role: "basicSusi" }
+        ];
+
+        // masukan id 
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginButton = document.getElementById('loginButton');
+        const logoutButton = document.getElementById('logoutButton');
+
+        const textAdmin = document.getElementById('admin');
+        const textBudi = document.getElementById('basicBudi');
+        const textMawar = document.getElementById('basicMawar');
+        const textAndi = document.getElementById('basicAndi');
+        const textDian = document.getElementById('basicDian');
+        const textSusi = document.getElementById('basicSusi');
+
+        function hideAllRoles() {
+            textAdmin.classList.add('hidden');
+            textBudi.classList.add('hidden');
+            textMawar.classList.add('hidden');
+            textAndi.classList.add('hidden');
+            textDian.classList.add('hidden');
+            textSusi.classList.add('hidden');
+        }
+
+        // mengatur tampilan setelah login
+        function updateUI(isLoggedIn, role = "") {
+            if (isLoggedIn) {
+                usernameInput.classList.add('hidden');
+                passwordInput.classList.add('hidden');
+                loginButton.classList.add('hidden');
+                logoutButton.classList.remove('hidden');
+
+                // sembunyikan semua text baru munculkan sesuai role
+                hideAllRoles();
+                // mengecek ID secara spesifik
+                if (role === "admin") {
+                    textAdmin.classList.remove('hidden');
+                } else if (role === "basicBudi") {
+                    textBudi.classList.remove('hidden');
+                } else if (role === "basicMawar") {
+                    textMawar.classList.remove('hidden');
+                } else if (role === "basicAndi") {
+                    textAndi.classList.remove('hidden');
+                } else if (role === "basicDian") {
+                    textAndi.classList.remove('hidden');
+                } else if (role === "basicSusi") {
+                    textSusi.classList.remove('hidden');
+                }
+            } else {
+                usernameInput.value = "";
+                passwordInput.value = "";
+
+                usernameInput.classList.remove('hidden');
+                passwordInput.classList.remove('hidden');
+                loginButton.classList.remove('hidden');
+                logoutButton.classList.add('hidden');
+                hideAllRoles();
+            }
+        }
+        const savedUsername = localStorage.getItem('username');
+        const savedRole = localStorage.getItem('role');
+        if (savedUsername) {
+            updateUI(true, savedRole);
+        }
+
+        function onlogin() {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (username === "" || password === "") {
+                alert("Username dan password tidak boleh kosong!");
+                return;
+            }
+
+            const foundUser = users.find(user => user.username === username && user.password === password);
+
+            if (foundUser) {
+                localStorage.setItem("username", foundUser.username);
+                localStorage.setItem("role", foundUser.role);
+                updateUI(true, foundUser.role);
+            } else {
+                alert("Username atau password salah!");
+            }
+        }
+
+        function onlogout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("role");
+            updateUI(false);
+        }
+    </script>
+</body>
+</html>
+
